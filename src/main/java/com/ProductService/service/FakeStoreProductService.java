@@ -19,7 +19,7 @@ public class FakeStoreProductService implements  IProductService{
         Product product = new Product();
         product.setId(response.getId());
         product.setName(response.getTitle());
-        product.setDescr(response.getDescription());
+        product.setDescription(response.getDescription());
         product.setPrice(response.getPrice());
         product.setCategory(new Category());
         product.getCategory().setName(response.getCategory());

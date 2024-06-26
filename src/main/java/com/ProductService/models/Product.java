@@ -11,11 +11,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Product extends BaseModel {
-    private String descr;
+    private String description;
     private String image;
-    private double price;
+    private float price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToOne
     private Category category;
 }
