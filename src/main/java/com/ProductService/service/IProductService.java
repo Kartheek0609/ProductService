@@ -9,5 +9,5 @@ import java.util.List;
 public interface IProductService {
 
     Product getSingleProduct(long id);
-//    List<Product> getAllProducts();
+    List<Product> getAllProducts();
 }
