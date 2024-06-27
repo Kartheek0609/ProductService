@@ -2,6 +2,7 @@ package com.ProductService.service;
 
 
 import com.ProductService.dtos.ProductResponseDto;
+import com.ProductService.exceptions.ProductNotPresentException;
 import com.ProductService.models.Category;
 import com.ProductService.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,14 @@ public class FakeStoreProductService implements  IProductService{
     @Autowired
     RestTemplate restTemplate;
     @Override
-    public Product getSingleProduct(long id){
+    public Product getSingleProduct(long id) throws ProductNotPresentException{
+
+        if(id<=0 || id>20 && id<=40){
+            throw new ProductNotPresentException();
+        }
+        if(id>40){
+            throw new ArithmeticException();
+        }
         ProductResponseDto response = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 ProductResponseDto.class);
         return getProductFromResponseDto(response);
