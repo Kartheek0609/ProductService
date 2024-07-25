@@ -6,6 +6,7 @@ import com.ProductService.exceptions.ProductNotPresentException;
 import com.ProductService.models.Category;
 import com.ProductService.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,9 +17,11 @@ import java.util.List;
 public class FakeStoreProductService implements  IProductService{
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    RedisTemplate redisTemplate;
     @Override
     public Product getSingleProduct(long id) throws ProductNotPresentException{
-
+        /*
         if(id<=0 || id>20 && id<=40){
             throw new ProductNotPresentException();
         }
@@ -28,6 +31,23 @@ public class FakeStoreProductService implements  IProductService{
         ProductResponseDto response = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 ProductResponseDto.class);
         return getProductFromResponseDto(response);
+
+         */
+        if(redisTemplate.opsForHash().hasKey(id, "something")==false) {
+
+            if (id > 20) {
+                throw new ProductNotPresentException();
+            }
+
+            // I should pass this 'id' to fakestore and get the details of this product.
+            // "https://fakestoreapi.com/products/1"
+            ProductResponseDto response = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
+                    ProductResponseDto.class);
+
+            redisTemplate.opsForHash().put(id, "something", getProductFromResponseDto(response));
+        }
+        return (Product) redisTemplate.opsForHash().get(id, "something");
+
     }
 
     @Override
